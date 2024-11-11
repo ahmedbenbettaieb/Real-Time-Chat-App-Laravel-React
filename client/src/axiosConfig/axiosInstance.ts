@@ -12,4 +12,4 @@ const token=localStorage.getItem("token");
    },
  });
 
-export default axiosInstance
+export default axiosInstance ;
