@@ -35,7 +35,7 @@ export const getUserData = createAsyncThunk<UserInfoTypes, void>(
     }
   }
 );
-export const register=createAsyncThunk<UserInfoTypes,void>(
+export const register=createAsyncThunk(
     'register',
     async(values:any, {rejectWithValue}) => {
         try {
@@ -50,7 +50,7 @@ export const register=createAsyncThunk<UserInfoTypes,void>(
     }
 )
 
-export const login=createAsyncThunk<UserInfoTypes,void>(
+export const login=createAsyncThunk(
   'login',
   async(values:any, {rejectWithValue}) => {
     try {

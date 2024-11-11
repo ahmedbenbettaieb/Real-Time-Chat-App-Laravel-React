@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { userFormTypes } from '../../types/userFormType';
 import { userFormError } from '../../types/userFormError';
-
+import { useAppDispatch, useAppSelector } from '../../redux/store';
+import { register as registerUser } from "../../redux/userSlice";
 export default function register() {
+    const dispatch=useAppDispatch();
      const [formData, setFormData] = useState<userFormTypes>({
        name: "",
        email: "",
@@ -18,12 +20,11 @@ export default function register() {
      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
        const { name, value } = e.target;
        setFormData((prev) => ({ ...prev, [name]: value }));
-       setErrors((prev) => ({ ...prev, [name]: "" })); // Clear errors as user types
+       setErrors((prev) => ({ ...prev, [name]: "" })); 
      };
-      const handleSubmit = (e: React.FormEvent) => {
+      const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
 
-        // Basic validation
         const newErrors: userFormError = {
           name: formData.name ? "" : "Name is required",
           email: formData.email ? "" : "Email is required",
@@ -34,8 +35,18 @@ export default function register() {
         // Check if there are any errors
         if (Object.values(newErrors).some((error) => error)) return;
 
-        console.log("Form Data:", formData);
+        try {
+                  const formDataJson = JSON.stringify(formData);
+
+           const response= await dispatch(registerUser(formDataJson));
+           console.log("response",response);
+
+        }catch(error){
+            console.log("error",error);
+        }
       };
+
+     
 
 
 
