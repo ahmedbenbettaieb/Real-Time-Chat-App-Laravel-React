@@ -88,8 +88,7 @@ class AuthController extends Controller
         try {
             $user = auth()->user();
             return response()->json([
-                'message' => 'User Profile',
-                'user' => $user
+                $user
             ], 200);
         } catch (\Throwable $th) {
             return response()->json([
