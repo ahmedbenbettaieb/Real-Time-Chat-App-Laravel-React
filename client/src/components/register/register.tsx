@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { userFormTypes } from '../../types/userFormType';
 import { userFormError } from '../../types/userFormError';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
-import { register as registerUser } from "../../redux/userSlice";
+import { register as registerUser, resetUser } from "../../redux/userSlice";
+import toast from 'react-hot-toast';
 export default function register() {
     const dispatch=useAppDispatch();
+    const {success,error,message}=useAppSelector(state=>state.user);
      const [formData, setFormData] = useState<userFormTypes>({
        name: "",
        email: "",
@@ -36,15 +38,24 @@ export default function register() {
         if (Object.values(newErrors).some((error) => error)) return;
 
         try {
-                  const formDataJson = JSON.stringify(formData);
+          const formDataJson = JSON.stringify(formData);
 
-           const response= await dispatch(registerUser(formDataJson));
-           console.log("response",response);
+          const response= await dispatch(registerUser(formDataJson));
 
         }catch(error){
             console.log("error",error);
         }
       };
+
+    useEffect(()=>{
+      if(success){
+        toast.success(message);
+      }
+      if (error){
+        toast.error(error);
+      }
+      dispatch(resetUser());
+    },[success,error,dispatch,message]);
 
      
 

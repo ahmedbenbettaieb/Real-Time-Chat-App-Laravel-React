@@ -2,19 +2,22 @@ import { UserInfoTypes } from "../types/userType";
 import axiosInstance from "../axiosConfig/axiosInstance";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
 type InitialStateTypes = {
   user: UserInfoTypes | null;
   error: string | null;
   loading: boolean;
-  isAuthenticated:boolean
+  isAuthenticated: boolean;
+  success: boolean;
+  message: string | null;
 };
 
 const initialState: InitialStateTypes = {
   user: null,
   error: null,
   loading: false,
-  isAuthenticated:false,
+  isAuthenticated: false,
+  success: false,
+  message: null,
 };
 
 export const getUserData = createAsyncThunk<UserInfoTypes, void>(
@@ -35,39 +38,35 @@ export const getUserData = createAsyncThunk<UserInfoTypes, void>(
     }
   }
 );
-export const register=createAsyncThunk(
-    'register',
-    async(values:any, {rejectWithValue}) => {
-        try {
-            const response = await axiosInstance.post('auth/register',values)
-            return response.data
-        } catch (error: any) {
-            console.error('Error fetching user data:', error);
-            return rejectWithValue(
-                error.response?.data?.message || "Failed to fetch user data"
-            );
-        }
-    }
-)
-
-export const login=createAsyncThunk(
-  'login',
-  async(values:any, {rejectWithValue}) => {
+export const register = createAsyncThunk(
+  "register",
+  async (values: any, { rejectWithValue }) => {
     try {
-      const response=await axiosInstance.post('auth/login', values)
-      return response.data
-    } catch (error:any) {
-      console.error('Error fetching user data:', error);
+      const response = await axiosInstance.post("auth/register", values);
+      return response.data;
+    } catch (error: any) {
+      console.error("Error fetching user data:", error);
       return rejectWithValue(
-          error.response?.data?.message || "Failed to fetch user data"
+        error.response?.data?.message || "Failed to fetch user data"
       );
-
-      
     }
-    
   }
+);
 
-)
+export const login = createAsyncThunk(
+  "login",
+  async (values: any, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("auth/login", values);
+      return response.data;
+    } catch (error: any) {
+      console.error("Error fetching user data:", error);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch user data"
+      );
+    }
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -81,7 +80,9 @@ export const userSlice = createSlice({
       state.user = null;
       state.error = null;
       state.loading = false;
-      state.isAuthenticated=false;
+      state.isAuthenticated = false;
+      state.success = false;
+      state.message = null;
     },
   },
   extraReducers: (builder) => {
@@ -94,34 +95,44 @@ export const userSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.error = null;
+        state.success = true;
       })
       .addCase(getUserData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-      }).addCase(register.pending, (state, action) => {
-        state.loading = true;
-        state.error = null;
-      }).addCase(register.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-      }).addCase(register.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      }).addCase(login.pending, (state, action) => {
-        state.loading = true;
-        state.error = null;
-      }).addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.isAuthenticated=true;
-      }).addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-        state.isAuthenticated=false;
-
+        state.success = false;
       })
-
-      
+      .addCase(register.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
+        state.message = action.payload.message;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(login.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.isAuthenticated = true;
+        state.success = true;
+        state.message = action.payload.message;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.isAuthenticated = false;
+      });
   },
 });
 
