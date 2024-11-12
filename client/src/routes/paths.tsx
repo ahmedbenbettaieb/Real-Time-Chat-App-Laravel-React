@@ -15,6 +15,7 @@ const Loadable =
   const Register=Loadable(lazy(() => import("../pages/registerPage/registerPage")));
   const Login=Loadable(lazy(() => import("../pages/loginPage/loginPage")));
   const Home=Loadable(lazy(() => import("../pages/home/homePage")));
+  const Chat=Loadable(lazy(() => import("../pages/ChatPage/Chat")));
   export default function AppRoutes(){
 
     return useRoutes([
@@ -34,6 +35,14 @@ const Loadable =
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/chat",
+        element: (
+          <ProtectedRoute>
+            <Chat />
+          </ProtectedRoute>
+        ),
+      }
     ]);
 
 
