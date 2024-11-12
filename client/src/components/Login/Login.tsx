@@ -52,11 +52,11 @@ export default function Login() {
       useEffect(() => {
         if (success) {
           toast.success(message);
+          navigate("/home");
         }
         if (error) {
           toast.error(error);
         }
-        dispatch(resetUser());
       }, [success, error, dispatch, message]);
     
       const handleNavigate = () => {

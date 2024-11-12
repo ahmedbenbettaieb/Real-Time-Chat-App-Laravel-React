@@ -29,7 +29,7 @@ export const getUserData = createAsyncThunk<UserInfoTypes, void>(
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      return response.data;
+      return response.data[0];
     } catch (error: any) {
       console.error("Error fetching user data:", error);
       return rejectWithValue(
@@ -58,7 +58,9 @@ export const login = createAsyncThunk(
   async (values: any, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post("auth/login", values);
+      localStorage.setItem("token", response.data.access_token);
       return response.data;
+
     } catch (error: any) {
       console.error("Err", error);
       return rejectWithValue(
