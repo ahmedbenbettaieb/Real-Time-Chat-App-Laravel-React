@@ -60,7 +60,7 @@ export const login = createAsyncThunk(
       const response = await axiosInstance.post("auth/login", values);
       return response.data;
     } catch (error: any) {
-      console.error("Error fetching user data:", error);
+      console.error("Err", error);
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch user data"
       );

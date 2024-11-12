@@ -63,7 +63,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Invalid credentials', 'success' => false], 401);
+            return response()->json(['message' => 'Invalid credentials', 'success' => false], 401);
         }
 
         return $this->createNewToken($token);
@@ -81,6 +81,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => 3600,
+            'message' => 'Redirecting to home page',
             'success' => true
         ]);
     }

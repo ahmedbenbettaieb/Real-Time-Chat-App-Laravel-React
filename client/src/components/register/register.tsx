@@ -4,9 +4,11 @@ import { userFormError } from '../../types/userFormError';
 import { useAppDispatch, useAppSelector } from '../../redux/store';
 import { register as registerUser, resetUser } from "../../redux/userSlice";
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 export default function register() {
     const dispatch=useAppDispatch();
     const {success,error,message}=useAppSelector(state=>state.user);
+    const navigate=useNavigate();
      const [formData, setFormData] = useState<userFormTypes>({
        name: "",
        email: "",
@@ -57,7 +59,9 @@ export default function register() {
       dispatch(resetUser());
     },[success,error,dispatch,message]);
 
-     
+    const handleNavigate = () => {
+      navigate("/login");
+    };
 
 
 
@@ -119,13 +123,13 @@ export default function register() {
             <p className="text-red-500 text-sm mt-1">{errors.password}</p>
           )}
         </div>
-
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
         >
           Register
         </button>
+        <p className="font-normal underline text-center hover:cursor-pointer" onClick={handleNavigate} >Already have an account ? </p>
       </form>
     </div>
   );

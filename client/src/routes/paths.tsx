@@ -12,13 +12,17 @@ const Loadable =
   };
 
   const Register=Loadable(lazy(() => import("../pages/registerPage/registerPage")));
-
+  const Login=Loadable(lazy(() => import("../pages/loginPage/loginPage")));
   export default function AppRoutes(){
 
     return useRoutes([
         {
             path:"/register",
             element:<Register/>
+        },
+        {
+            path:"/login",
+            element:<Login/>
         }
 
     ])
